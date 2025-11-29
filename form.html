@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syntra 3.0 - Documentação Completa</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; font-family: 'Fira Code', 'Courier New', monospace; }
+    body { background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b4e 100%); color: #e0e0e0; padding: 20px; overflow-y: auto; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-size: 3em; background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+    .header p { color: #aaa; font-size: 1.1em; }
+    .back-btn { display: inline-block; margin-bottom: 30px; padding: 12px 24px; background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; text-decoration: none; transition: all 0.3s; }
+    .back-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(147, 51, 234, 0.4); }
+    .section { background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(147, 51, 234, 0.3); border-radius: 12px; padding: 30px; margin-bottom: 30px; }
+    .section h2 { color: #9333ea; font-size: 2em; margin-bottom: 20px; border-bottom: 2px solid rgba(147, 51, 234, 0.3); padding-bottom: 10px; }
+    .section h3 { color: #db2777; font-size: 1.5em; margin-top: 20px; margin-bottom: 10px; }
+    .example { background: rgba(147, 51, 234, 0.1); border-left: 4px solid #9333ea; padding: 15px; margin: 15px 0; border-radius: 6px; overflow-x: auto; }
+    .example-title { color: #db2777; font-weight: bold; margin-bottom: 8px; }
+    code { background: rgba(0, 0, 0, 0.3); padding: 2px 6px; border-radius: 4px; color: #90ee90; }
+    .code-block { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(147, 51, 234, 0.3); padding: 15px; border-radius: 8px; margin: 10px 0; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+    .note { background: rgba(219, 39, 119, 0.1); border-left: 4px solid #db2777; padding: 15px; margin: 15px 0; border-radius: 6px; }
+    .note-title { color: #ff1493; font-weight: bold; margin-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-btn">← Voltar para IDE</a>
+    
+    <div class="header">
+      <h1>📚 SYNTRA 3.0 - Documentação Completa</h1>
+      <p>Guia completo com exemplos de toda a linguagem Syntra com aninhamento completo</p>
+    </div>
+
+    <!-- VARIÁVEIS -->
+    <div class="section">
+      <h2>📦 VARIÁVEIS</h2>
+      
+      <h3>Declaração de Variáveis Locais</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Criar variáveis locais</div>
+        <div class="code-block">var x = 10
+local nome = "Syntra"
+local resultado = 42
+
+out(x)
+out(nome)
+out(resultado)</div>
+      </div>
+
+      <h3>Variáveis Globais</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Usar variáveis globais</div>
+        <div class="code-block">global contador = 0
+global jogador = "Kah"
+
+function incrementar()
+  global contador = contador + 1
+  out(contador)
+end
+
+incrementar()
+incrementar()
+incrementar()</div>
+      </div>
+
+      <h3>Operações com Variáveis</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Aritmética</div>
+        <div class="code-block">var a = 15
+var b = 3
+
+var soma = a + b
+var subtracao = a - b
+var multiplicacao = a * b
+var divisao = a / b
+
+out(soma)
+out(subtracao)
+out(multiplicacao)
+out(divisao)</div>
+      </div>
+    </div>
+
+    <!-- SAÍDA -->
+    <div class="section">
+      <h2>📤 SAÍDA (OUTPUT)</h2>
+      
+      <h3>Exibir Valores</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: out() com tipos diferentes</div>
+        <div class="code-block">out("Olá, Mundo!")
+out(42)
+out(3.14)
+out(true)
+
+var mensagem = "Syntra é incrível"
+out(mensagem)</div>
+      </div>
+
+      <h3>Concatenação de Strings</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Concatenar strings</div>
+        <div class="code-block">var nome = "Kah"
+var idade = 20
+
+out("Nome: " + nome)
+out("Idade: " + idade)
+out("Olá, " + nome + "! Você tem " + idade + " anos.")</div>
+      </div>
+    </div>
+
+    <!-- CONDIÇÕES -->
+    <div class="section">
+      <h2>✅ CONDIÇÕES (IF/ELSE)</h2>
+      
+      <h3>If Simples</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Decisão simples</div>
+        <div class="code-block">var idade = 18
+
+if (idade >= 18) then
+  out("Você é maior de idade!")
+end</div>
+      </div>
+
+      <h3>If/Else</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Duas opções</div>
+        <div class="code-block">var nota = 7
+
+if (nota >= 7) then
+  out("Aprovado!")
+else
+  out("Reprovado!")
+end</div>
+      </div>
+
+      <h3>Aninhamento de Condições</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: If aninhado</div>
+        <div class="code-block">var numero = 15
+
+if (numero > 0) then
+  if (numero > 10) then
+    out("Número grande e positivo!")
+  else
+    out("Número pequeno e positivo!")
+  end
+else
+  if (numero == 0) then
+    out("É zero!")
+  else
+    out("Número negativo!")
+  end
+end</div>
+      </div>
+
+      <h3>Comparações</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Operadores de comparação</div>
+        <div class="code-block">var x = 10
+
+if (x > 5) then out("x > 5") end
+if (x < 15) then out("x < 15") end
+if (x >= 10) then out("x >= 10") end
+if (x <= 10) then out("x <= 10") end
+if (x == 10) then out("x == 10") end
+if (x != 5) then out("x != 5") end</div>
+      </div>
+
+      <h3>Lógica (AND/OR/NOT)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Operadores lógicos</div>
+        <div class="code-block">var idade = 25
+var temCarteira = true
+
+if (idade >= 18 and temCarteira) then
+  out("Pode dirigir!")
+end
+
+if (idade < 18 or temCarteira == false) then
+  out("Não pode dirigir!")
+end</div>
+      </div>
+    </div>
+
+    <!-- LOOPS -->
+    <div class="section">
+      <h2>🔄 LOOPS (FOR/WHILE)</h2>
+      
+      <h3>For Loop Simples</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Contar até 5</div>
+        <div class="code-block">for i to 5 then
+  out(i)
+end</div>
+      </div>
+
+      <h3>For com Condições (Aninhado)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Apenas números pares</div>
+        <div class="code-block">for i to 10 then
+  if (i % 2 == 0) then
+    out(i)
+  end
+end</div>
+      </div>
+
+      <h3>For com Múltiplos Aninhamentos</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Tabuada</div>
+        <div class="code-block">for x to 3 then
+  for y to 3 then
+    var resultado = x * y
+    out(resultado)
+  end
+end</div>
+      </div>
+
+      <h3>While Loop</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Enquanto uma condição é verdadeira</div>
+        <div class="code-block">var contador = 1
+
+while (contador <= 5) do
+  out(contador)
+  contador = contador + 1
+end</div>
+      </div>
+
+      <h3>While com If (Aninhado)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: While com quebra condicional</div>
+        <div class="code-block">var x = 0
+
+while (x < 20) do
+  if (x == 10) then
+    out("Encontrou 10!")
+  end
+  x = x + 2
+  out(x)
+end</div>
+      </div>
+    </div>
+
+    <!-- FUNÇÕES -->
+    <div class="section">
+      <h2>🔧 FUNÇÕES</h2>
+      
+      <h3>Função Simples</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Função sem retorno</div>
+        <div class="code-block">function saudacao(nome)
+  out("Olá, " + nome + "!")
+end
+
+saudacao("Kah")
+saudacao("Syntra")</div>
+      </div>
+
+      <h3>Função com Múltiplos Parâmetros</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Somar dois números</div>
+        <div class="code-block">function somar(a, b)
+  var resultado = a + b
+  out(resultado)
+end
+
+somar(10, 20)
+somar(5, 15)</div>
+      </div>
+
+      <h3>Função com Retorno</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Return de valores</div>
+        <div class="code-block">function multiplicar(x, y)
+  var resultado = x * y
+  return resultado
+end
+
+var resposta = multiplicar(5, 3)
+out(resposta)</div>
+      </div>
+
+      <h3>Função com Aninhamento Completo</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Função com loops e condições</div>
+        <div class="code-block">function verificarPar(numero)
+  if (numero % 2 == 0) then
+    out("É par!")
+    return true
+  else
+    out("É impar!")
+    return false
+  end
+end
+
+verificarPar(4)
+verificarPar(7)</div>
+      </div>
+
+      <h3>Função Recursiva</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Fatorial</div>
+        <div class="code-block">function fatorial(n)
+  if (n <= 1) then
+    return 1
+  else
+    var resultado = n * fatorial(n - 1)
+    return resultado
+  end
+end
+
+out(fatorial(5))</div>
+      </div>
+    </div>
+
+    <!-- MATEMÁTICA -->
+    <div class="section">
+      <h2>📊 FUNÇÕES MATEMÁTICAS</h2>
+      
+      <h3>Random (Número Aleatório)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Gerar número aleatório</div>
+        <div class="code-block">var numero = random(1, 100)
+out(numero)
+
+for i to 5 then
+  out(random(1, 10))
+end</div>
+      </div>
+
+      <h3>Distance (Distância entre pontos)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Calcular distância</div>
+        <div class="code-block">var dist = distance(0, 0, 3, 4)
+out(dist)
+
+var d2 = distance(10, 20, 15, 25)
+out(d2)</div>
+      </div>
+
+      <h3>Operações Matemáticas Avançadas</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Cálculos complexos</div>
+        <div class="code-block">var a = 10
+var b = 3
+var c = 2
+
+var resultado1 = (a + b) * c
+var resultado2 = a * b / c
+var resultado3 = a - b + c * 2
+
+out(resultado1)
+out(resultado2)
+out(resultado3)</div>
+      </div>
+    </div>
+
+    <!-- OBJETOS (ENGINE) -->
+    <div class="section">
+      <h2>🎮 OBJETOS (Game Engine)</h2>
+      
+      <h3>Posicionamento</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Mover objeto</div>
+        <div class="code-block">var player = "hero"
+
+setPosition(player, 100, 200)
+setPosition(player, 150, 250)</div>
+      </div>
+
+      <h3>Cores e Rotação</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Modificar aparência</div>
+        <div class="code-block">var objeto = "cube"
+
+setColor(objeto, 255, 0, 0)
+setRotation(objeto, 45)
+setScale(objeto, 2, 2)</div>
+      </div>
+
+      <h3>Física (Velocidade e Gravidade)</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Aplicar física</div>
+        <div class="code-block">var bola = "ball"
+
+setVelocity(bola, 10, 5)
+setGravity(bola, 9.8)
+setBounce(bola, 0.8)
+applyForce(bola, 20, -30)</div>
+      </div>
+
+      <h3>Câmera</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Controlar câmera</div>
+        <div class="code-block">camera.set(100, 100)
+camera.zoom(2.5)
+camera.follow("player")
+camera.shake(5, 500)</div>
+      </div>
+
+      <h3>UI</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Interface do usuário</div>
+        <div class="code-block">ui.create("botao", "Clique Aqui!")
+ui.setText("titulo", "Score: 1000")
+ui.setColor("fundo", 50, 50, 50)</div>
+      </div>
+    </div>
+
+    <!-- EXPLORER -->
+    <div class="section">
+      <h2>🔍 EXPLORER (Busca de Objetos)</h2>
+      
+      <h3>Encontrar Objeto Específico</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Buscar por nome</div>
+        <div class="code-block">var meuObjeto = FindChild("Player")
+out(meuObjeto)</div>
+      </div>
+
+      <h3>Encontrar Todos de um Tipo</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Buscar todos os inimigos</div>
+        <div class="code-block">var inimigos = FindAllType("Enemy")
+out(inimigos)</div>
+      </div>
+
+      <h3>Verificar Existência</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Verificar se existe</div>
+        <div class="code-block">var existe = exists("Player")
+
+if (existe) then
+  out("Player encontrado!")
+else
+  out("Player não existe!")
+end</div>
+      </div>
+
+      <h3>Caminho de Objeto</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Obter caminho</div>
+        <div class="code-block">var caminhoPlayer = path("Workspace/Player")
+var caminhoHUD = path("UI/HUD/Health")</div>
+      </div>
+    </div>
+
+    <!-- ANINHAMENTO AVANÇADO -->
+    <div class="section">
+      <h2>🎯 ANINHAMENTO AVANÇADO (Tudo Combinado)</h2>
+      
+      <h3>Exemplo 1: Game Loop Básico</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Loop de jogo com lógica</div>
+        <div class="code-block">var pontos = 0
+var rodadas = 0
+
+while (rodadas < 10) do
+  var numero = random(1, 6)
+  out(numero)
+  
+  if (numero > 3) then
+    pontos = pontos + 10
+    out("Ganhou 10 pontos!")
+  else
+    out("Perdeu essa rodada!")
+  end
+  
+  rodadas = rodadas + 1
+end
+
+out("Pontos Finais: " + pontos)</div>
+      </div>
+
+      <h3>Exemplo 2: Sistema de Inventário</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Gerenciar itens com funções</div>
+        <div class="code-block">function adicionarItem(nome, quantidade)
+  out("Adicionou: " + nome + " x" + quantidade)
+end
+
+function removerItem(nome)
+  if (exists(nome)) then
+    out("Removeu: " + nome)
+    return true
+  else
+    out("Item não encontrado!")
+    return false
+  end
+end
+
+adicionarItem("Espada", 1)
+adicionarItem("Poção", 5)
+removerItem("Espada")</div>
+      </div>
+
+      <h3>Exemplo 3: Sistema de Combate</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Batalha com turnos</div>
+        <div class="code-block">function calcularDano(ataque, defesa)
+  var dano = ataque - defesa
+  
+  if (dano <= 0) then
+    return 0
+  else
+    return dano
+  end
+end
+
+var vidaJogador = 100
+var vidaInimigo = 80
+var turno = 1
+
+while (vidaJogador > 0 and vidaInimigo > 0) do
+  out("Turno: " + turno)
+  
+  var ataqueJogador = random(15, 25)
+  var danoNoInimigo = calcularDano(ataqueJogador, 5)
+  vidaInimigo = vidaInimigo - danoNoInimigo
+  
+  out("Dano no inimigo: " + danoNoInimigo)
+  out("Vida inimigo: " + vidaInimigo)
+  
+  if (vidaInimigo <= 0) then
+    out("Você venceu!")
+  else
+    var ataqueInimigo = random(10, 20)
+    var danoNoJogador = calcularDano(ataqueInimigo, 8)
+    vidaJogador = vidaJogador - danoNoJogador
+    out("Dano no jogador: " + danoNoJogador)
+    out("Vida jogador: " + vidaJogador)
+  end
+  
+  turno = turno + 1
+end</div>
+      </div>
+
+      <h3>Exemplo 4: Sistema de Níveis</h3>
+      <div class="example">
+        <div class="example-title">Exemplo: Progression com funções aninhadas</div>
+        <div class="code-block">function calcularNivel(experiencia)
+  var nivel = 1
+  
+  if (experiencia >= 100) then
+    nivel = 2
+    if (experiencia >= 250) then
+      nivel = 3
+      if (experiencia >= 500) then
+        nivel = 4
+      end
+    end
+  end
+  
+  return nivel
+end
+
+function ganharExperiencia(exp, quantidade)
+  var novaExp = exp + quantidade
+  var novoNivel = calcularNivel(novaExp)
+  
+  out("Experiência: " + novaExp)
+  out("Nível: " + novoNivel)
+  
+  return novaExp
+end
+
+var exp = 0
+exp = ganharExperiencia(exp, 50)
+exp = ganharExperiencia(exp, 75)
+exp = ganharExperiencia(exp, 150)
+exp = ganharExperiencia(exp, 200)</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="note-title">💡 Dica Final:</div>
+      Syntra suporta aninhamento completo! Você pode combinar loops, condições, funções e operações matemáticas em qualquer nível de profundidade. Pratique criando pequenos programas e vá aumentando a complexidade!
+    </div>
+  </div>
+</body>
+</html>

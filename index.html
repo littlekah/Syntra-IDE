@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syntra IDE - Interpretador Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #58a6ff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: #c9d1d9;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #21262d;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 65px);
+        }
+
+        .editor-panel,
+        .console-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-panel {
+            flex: 6;
+            border-right: 1px solid #30363d;
+        }
+
+        .console-panel {
+            flex: 4;
+        }
+
+        .panel-header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            background: #0d1117;
+            overflow: hidden;
+        }
+
+        .line-numbers {
+            background: #161b22;
+            border-right: 1px solid #30363d;
+            padding: 1rem 0.5rem;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #6e7681;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .code-area {
+            flex: 1;
+            position: relative;
+        }
+
+        #codeEditor {
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            background: transparent;
+            color: #c9d1d9;
+            border: none;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        #console {
+            flex: 1;
+            padding: 1rem;
+            background: #0d1117;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .console-line {
+            margin-bottom: 0.25rem;
+        }
+
+        .console-error {
+            color: #f85149;
+            font-weight: bold;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        button.secondary {
+            background: #21262d;
+            color: #c9d1d9;
+        }
+
+        button.secondary:hover {
+            background: #30363d;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .autocomplete {
+            position: absolute;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .autocomplete-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: #21262d;
+            color: #58a6ff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .editor-panel {
+                border-right: none;
+                border-bottom: 1px solid #30363d;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ Syntra IDE</h1>
+        <div class="nav-links">
+            <a href="index.html" class="active">Interpretador</a>
+            <a href="form.html">Sintaxe</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                <span class="panel-title">📝 Editor</span>
+                <div class="buttons">
+                    <button onclick="runCode()">▶ Executar</button>
+                    <button class="secondary" onclick="clearEditor()">🗑 Limpar</button>
+                </div>
+            </div>
+            <div class="editor-container">
+                <div class="line-numbers" id="lineNumbers">1</div>
+                <div class="code-area">
+                    <textarea id="codeEditor" spellcheck="false" placeholder="// Escreva seu código Syntra aqui..."></textarea>
+                    <div class="autocomplete" id="autocomplete" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-panel">
+            <div class="panel-header">
+                <span class="panel-title">💻 Console</span>
+                <button class="secondary" onclick="clearConsole()">🗑 Limpar</button>
+            </div>
+            <div id="console">
+                <div style="color: #6e7681;">Console de saída. Execute seu código para ver os resultados.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('codeEditor');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const consoleOutput = document.getElementById('console');
+        const autocompleteBox = document.getElementById('autocomplete');
+
+        const keywords = ['out', 'var', 'global', 'local', 'if', 'elseif', 'else', 'end', 'while', 'do', 'for', 'to', 'then', 'function', 'def', 'return', 'table', 'random', 'parallel', 'Syntax', 'lineBreak'];
+        
+        const autocompleteOptions = [
+            'out("texto")', 'out(var)', 'var nome = valor', 'global nome = valor',
+            'local nome = valor', 'if (condição) then', 'elseif (condição) then',
+            'else', 'end', 'while (condição) do', 'for i to v then',
+            'function nome()', 'def nome()', 'return valor', 'table nome = {"a", "b"}',
+            'random(min, max)', 'Syntax', 'lineBreak()'
+        ];
+
+        let selectedOption = 0;
+        let filteredOptions = [];
+
+        // Código exemplo inicial
+        const exampleCode = `// Exemplo de código Syntra
+out("Olá, Syntra!")
+
+var x = 10
+var y = 20
+out(x + y)
+
+if (x < y) then
+  out("x é menor que y")
+end
+
+for i to 5 then
+  out("Contagem: ")
+  out(i)
+end`;
+
+        // Carregar código salvo ou exemplo
+        editor.value = localStorage.getItem('syntra-code') || exampleCode;
+        updateLineNumbers();
+
+        // Salvar automaticamente
+        editor.addEventListener('input', () => {
+            updateLineNumbers();
+            localStorage.setItem('syntra-code', editor.value);
+            handleAutocomplete();
+        });
+
+        // Atualizar números de linha
+        function updateLineNumbers() {
+            const lines = editor.value.split('\n').length;
+            lineNumbers.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('\n');
+        }
+
+        // Auto-indentação
+        editor.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
+                editor.selectionStart = editor.selectionEnd = start + 2;
+            } else if (e.key === 'Enter') {
+                const start = editor.selectionStart;
+                const lines = editor.value.substring(0, start).split('\n');
+                const currentLine = lines[lines.length - 1];
+                
+                if (/^\s*(if|elseif|else|while|for|function|def)\b/.test(currentLine.trim())) {
+                    e.preventDefault();
+                    const indent = currentLine.match(/^\s*/)[0];
+                    const newValue = editor.value.substring(0, start) + '\n' + indent + '  ' + editor.value.substring(end);
+                    editor.value = newValue;
+                    editor.selectionStart = editor.selectionEnd = start + indent.length + 3;
+                    updateLineNumbers();
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            }
+        });
+
+        // Autocomplete
+        function handleAutocomplete() {
+            const start = editor.selectionStart;
+            const lines = editor.value.substring(0, start).split('\n');
+            const currentLine = lines[lines.length - 1];
+            const currentWord = currentLine.trim().split(/\s+/).pop() || '';
+            
+            if (currentWord.length > 0) {
+                filteredOptions = autocompleteOptions.filter(opt => 
+                    opt.toLowerCase().startsWith(currentWord.toLowerCase())
+                );
+                
+                if (filteredOptions.length > 0) {
+                    showAutocomplete();
+                } else {
+                    hideAutocomplete();
+                }
+            } else {
+                hideAutocomplete();
+            }
+        }
+
+        function showAutocomplete() {
+            autocompleteBox.innerHTML = filteredOptions.map((opt, idx) => 
+                `<div class="autocomplete-item ${idx === selectedOption ? 'selected' : ''}" onclick="selectAutocomplete(${idx})">${opt}</div>`
+            ).join('');
+            autocompleteBox.style.display = 'block';
+        }
+
+        function hideAutocomplete() {
+            autocompleteBox.style.display = 'none';
+        }
+
+        function selectAutocomplete(idx) {
+            const start = editor.selectionStart;
+            const lines = editor.value.substring(0, start).split('\n');
+            const currentLine = lines[lines.length - 1];
+            const lastWord = currentLine.trim().split(/\s+/).pop() || '';
+            const beforeWord = editor.value.substring(0, start - lastWord.length);
+            editor.value = beforeWord + filteredOptions[idx] + editor.value.substring(editor.selectionEnd);
+            hideAutocomplete();
+            editor.focus();
+            updateLineNumbers();
+        }
+
+        // Interpretador Syntra
+        function runCode() {
+            const code = editor.value;
+            const result = executeSyntra(code);
+            
+            consoleOutput.innerHTML = '';
+            result.output.forEach(line => {
+                const div = document.createElement('div');
+                div.className = 'console-line';
+                div.textContent = line;
+                consoleOutput.appendChild(div);
+            });
+            
+            if (result.error) {
+                const div = document.createElement('div');
+                div.className = 'console-line console-error';
+                div.textContent = result.error;
+                consoleOutput.appendChild(div);
+            }
+        }
+
+        function executeSyntra(code) {
+            const output = [];
+            const variables = new Map();
+            const globalVars = new Map();
+            const functions = new Map();
+            let currentLine = 0;
+
+            try {
+                const lines = code.split('\n');
+                executeLines(lines, 0, lines.length);
+                return { output, error: null };
+            } catch (error) {
+                return { output, error: `Erro na linha ${currentLine + 1}: ${error.message}` };
+            }
+
+            function executeLines(lines, start, end) {
+                let i = start;
+                while (i < end) {
+                    currentLine = i;
+                    const line = lines[i].trim();
+                    
+                    if (!line || line.startsWith('//')) {
+                        i++;
+                        continue;
+                    }
+
+                    if (line.startsWith('out(')) {
+                        const match = line.match(/out\((.*)\)/);
+                        if (match) {
+                            const content = match[1].trim();
+                            if (content.startsWith('"') && content.endsWith('"')) {
+                                output.push(content.slice(1, -1));
+                            } else {
+                                const val = getVariable(content);
+                                output.push(String(val !== undefined ? val : 'undefined'));
+                            }
+                        }
+                        i++;
+                    } else if (line.startsWith('var ')) {
+                        const match = line.match(/var\s+(\w+)\s*=\s*(.+)/);
+                        if (match) {
+                            variables.set(match[1], evalExpr(match[2].trim()));
+                        }
+                        i++;
+                    } else if (line.startsWith('global ')) {
+                        const match = line.match(/global\s+(\w+)\s*=\s*(.+)/);
+                        if (match) {
+                            globalVars.set(match[1], evalExpr(match[2].trim()));
+                        }
+                        i++;
+                    } else if (line.startsWith('if ')) {
+                        i = handleIf(lines, i);
+                    } else if (line.startsWith('while ')) {
+                        i = handleWhile(lines, i);
+                    } else if (line.startsWith('for ')) {
+                        i = handleFor(lines, i);
+                    } else {
+                        i++;
+                    }
+                }
+                return i;
+            }
+
+            function handleIf(lines, start) {
+                const match = lines[start].match(/if\s*\((.+)\)\s*then/);
+                if (!match) throw new Error('Sintaxe inválida para if');
+                
+                const condition = evalCondition(match[1].trim());
+                const endIdx = findBlockEnd(lines, start);
+                
+                if (condition) {
+                    executeLines(lines, start + 1, endIdx);
+                }
+                
+                return endIdx + 1;
+            }
+
+            function handleWhile(lines, start) {
+                const match = lines[start].match(/while\s*\((.+)\)\s*do/);
+                if (!match) throw new Error('Sintaxe inválida para while');
+                
+                const condExpr = match[1].trim();
+                const endIdx = findBlockEnd(lines, start);
+                
+                let iterations = 0;
+                while (evalCondition(condExpr) && iterations < 10000) {
+                    executeLines(lines, start + 1, endIdx);
+                    iterations++;
+                }
+                
+                return endIdx + 1;
+            }
+
+            function handleFor(lines, start) {
+                const match = lines[start].match(/for\s+(\w+)\s+to\s+(.+)\s+then/);
+                if (!match) throw new Error('Sintaxe inválida para for');
+                
+                const varName = match[1];
+                const toValue = evalExpr(match[2].trim());
+                const endIdx = findBlockEnd(lines, start);
+                
+                for (let i = 0; i < toValue; i++) {
+                    variables.set(varName, i);
+                    executeLines(lines, start + 1, endIdx);
+                }
+                
+                return endIdx + 1;
+            }
+
+            function findBlockEnd(lines, start) {
+                let depth = 1;
+                for (let i = start + 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith('if ') || line.startsWith('while ') || line.startsWith('for ')) {
+                        depth++;
+                    } else if (line === 'end') {
+                        depth--;
+                        if (depth === 0) return i;
+                    }
+                }
+                throw new Error('Bloco não fechado (faltando end)');
+            }
+
+            function evalCondition(expr) {
+                if (expr.includes('==')) {
+                    const [l, r] = expr.split('==').map(s => s.trim());
+                    return evalExpr(l) == evalExpr(r);
+                }
+                if (expr.includes('!=')) {
+                    const [l, r] = expr.split('!=').map(s => s.trim());
+                    return evalExpr(l) != evalExpr(r);
+                }
+                if (expr.includes('>=')) {
+                    const [l, r] = expr.split('>=').map(s => s.trim());
+                    return evalExpr(l) >= evalExpr(r);
+                }
+                if (expr.includes('<=')) {
+                    const [l, r] = expr.split('<=').map(s => s.trim());
+                    return evalExpr(l) <= evalExpr(r);
+                }
+                if (expr.includes('>')) {
+                    const [l, r] = expr.split('>').map(s => s.trim());
+                    return evalExpr(l) > evalExpr(r);
+                }
+                if (expr.includes('<')) {
+                    const [l, r] = expr.split('<').map(s => s.trim());
+                    return evalExpr(l) < evalExpr(r);
+                }
+                return Boolean(evalExpr(expr));
+            }
+
+            function evalExpr(expr) {
+                expr = expr.trim();
+                if (expr.startsWith('"') && expr.endsWith('"')) {
+                    return expr.slice(1, -1);
+                }
+                if (!isNaN(Number(expr))) {
+                    return Number(expr);
+                }
+                if (expr.includes('+') || expr.includes('-') || expr.includes('*') || expr.includes('/')) {
+                    return eval(expr.replace(/(\w+)/g, (m) => {
+                        const val = getVariable(m);
+                        return val !== undefined ? String(val) : m;
+                    }));
+                }
+                return getVariable(expr);
+            }
+
+            function getVariable(name) {
+                if (globalVars.has(name)) return globalVars.get(name);
+                if (variables.has(name)) return variables.get(name);
+                return undefined;
+            }
+        }
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '<div style="color: #6e7681;">Console limpo.</div>';
+        }
+
+        function clearEditor() {
+            editor.value = '';
+            updateLineNumbers();
+            clearConsole();
+            localStorage.removeItem('syntra-code');
+        }
+    </script>
+</body>
+</html>
